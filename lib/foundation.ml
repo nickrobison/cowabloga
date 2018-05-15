@@ -85,8 +85,8 @@ let rec intercalate x = function
   | e::es -> e :: x :: intercalate x es
 
 module Blog = struct
-
-  let post ~title ~authors ~date ~content =
+ 
+  let post ~title ~authors ~date ~image ~tags ~content =
     let open Link in
     let author = match authors with
       | [] -> empty
@@ -96,13 +96,31 @@ module Blog = struct
         in
         string "By " ++ list a_nodes
     in
+    let tag_block = match tags with
+      | None -> empty
+      | Some t ->
+        let t_nodes =
+          List.map (fun f -> a ~cls:"tag-cloud-individual-tag" (string f)) t
+        in
+        string "" ++ list t_nodes
+    in
     let title_text, title_uri = title in
-    tag "article" (
+    div ~cls:"responsive-blog-post" (
+    div ~cls:"individual-post" (
       date
       ++ h4 (a ~href:title_uri (string title_text))
+      ++ (match image with
+          | None -> []
+          | Some uri -> img uri)
       ++ p (i author)
       ++ content
-    )
+      ++ div ~cls:"tag-cloud-section" (
+        h5 ~cls:"tag-cloud-title" (string "Tags")
+        ++ div ~cls:"tag-cloud" (
+          tag_block
+        )
+      )
+    ))
 
   let t ~title ~subtitle ~sidebar ~posts ~copyright () =
     let subtitle =

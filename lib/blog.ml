@@ -35,6 +35,8 @@ module Entry = struct
     subject: string;
     permalink: string;
     body: string;
+    image: Uri.t option;
+    tags: string list option;
   }
 
   (** [permalink feed entry] returns the permalink URI for [entry] in [feed]. *)
@@ -63,7 +65,7 @@ module Entry = struct
       let permalink = Uri.of_string (permalink feed entry) in
       entry.subject, permalink
     in
-    Foundation.Blog.post ~title ~date ~authors ~content
+    Foundation.Blog.post ~title ~date ~authors ~tags:entry.tags ~image:entry.image ~content
 
   (** [to_atom feed entry] *)
   let to_atom feed entry =

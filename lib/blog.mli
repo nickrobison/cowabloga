@@ -23,6 +23,8 @@ module Entry : sig
     subject : string;
     permalink : string;
     body : string;
+    image : Uri.t option;
+    tags : string list option;
   }
   val permalink : Atom_feed.t -> t -> string
   val compare : t -> t -> int
