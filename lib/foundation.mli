@@ -45,7 +45,13 @@ end
 module Blog : sig
   val post: title:string * Uri.t -> authors:(string * Uri.t) list -> date:Cow.Html.t -> image:Uri.t option -> tags:string list option -> content:Cow.Html.t -> Cow.Html.t
 
-  val t: title:string -> subtitle:string option -> sidebar:Cow.Html.t -> posts:Cow.Html.t -> copyright:Cow.Html.t -> unit -> Cow.Html.t
+  val t: title:string
+    -> subtitle:string option
+    -> sidebar:Cow.Html.t
+    -> posts:Cow.Html.t
+    -> copyright:Cow.Html.t
+    -> ?pages:(int * int)
+    -> unit -> Cow.Html.t
 
 end
 

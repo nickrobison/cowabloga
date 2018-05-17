@@ -122,7 +122,44 @@ module Blog = struct
       )
     ))
 
-  let t ~title ~subtitle ~sidebar ~posts ~copyright () =
+  let t ~title ~subtitle ~sidebar ~posts ~copyright ?pages () =
+    let page_links = match pages with
+      | None -> empty
+      | Some p -> (
+          let previous_link = if (fst p) = 1 then
+              li ~cls:"pagination-previous disabled" (string "Previous")
+            else li ~cls:"pagination-previous"
+                ~attrs:["aria-label", "Previous page"]
+                (a ~href:(Uri.of_string ("/blog/" ^ (string_of_int ((fst p) - 1))))
+                   (string "Previous"))
+          in
+          let next_link = if (fst p) = (snd p) then
+              li ~cls:"pagination-next disabled" (string "Next")
+            else li ~cls:"pagination-next"
+                ~attrs:["aria-label", "Next page"]
+                (a ~href:(Uri.of_string ("/blog/" ^ (string_of_int ((fst p) + 1))))
+                   (string "Next"))
+          in
+          let rec build_list acc pg =
+            match pg with
+            | 0 -> acc
+            | x -> (
+                let lnk = match (x = (fst p)) with
+                  | true -> li ~cls:"current" (string (string_of_int x))
+                  | false -> li ~attrs:["aria-label", "Page " ^ (string_of_int x)]
+                               (a ~href:(Uri.of_string ("/blog/" ^ (string_of_int x)))
+                                  (string (string_of_int x)))
+                in
+                build_list (lnk :: acc) (x-1))
+          in
+          let link_list = previous_link :: build_list [next_link] (snd p) in
+          div ~cls:"row" (
+        nav ~attrs:["aria-label", "Pagination"]
+          (ul ~add_li:false ~cls:"pagination text-center"
+             link_list
+          ))
+        )
+    in
     let subtitle =
       match subtitle with
       | None   -> empty
@@ -135,6 +172,7 @@ module Blog = struct
         div ~cls:"small-12 large-9 columns" ~attrs:["role", "content"] posts
         ++ aside ~cls:"small-12 large-3 columns panel" sidebar
       );
+      page_links;
       footer ~cls:"row" (
         div ~cls:"large-12 columns" (
           hr
