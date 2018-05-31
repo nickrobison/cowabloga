@@ -238,7 +238,7 @@ let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
     ])
 
 let top_nav ~title ~title_uri ~nav_links =
-  div ~cls:"top-bar" ~attrs:["data-topbar",""] (
+  div ~cls:"top-bar" (
       div ~cls:"top-bar-left" (
         ul ~add_li:false ~cls:"dropdown menu" ~attrs: ["data-dropdown-menu", ""][
           li ~cls:"menu-text" (a ~href:title_uri title);
