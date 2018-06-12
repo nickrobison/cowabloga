@@ -43,6 +43,13 @@ let long_string_of_month m =
 
 let xml_of_month m = Cow.Xml.string @@ short_string_of_month m
 
+let ordinal_of_day dy =
+  let suffixes = ["th"; "st"; "nd"; "rd"; "th"; "th"; "th"; "th"; "th"; "th"] in
+  match (dy mod 100) with
+  | 11 | 12 | 13 -> (string_of_int dy) ^ "th"
+  | _ -> (string_of_int dy) ^ List.nth suffixes (dy mod 10)
+
+
 type date = {
   month : month;
   day   : int;
@@ -63,7 +70,12 @@ let html_of_date d =
 *)
 
 let html_of_date d =
-  Cow.Html.(p ~cls:"date" (xml_of_month d.month))
+  Cow.Html.(p ~cls:"date" (Cow.Xml.string
+                             ((short_string_of_month d.month)
+                              ^ " "
+                              ^ (ordinal_of_day d.day)
+                              ^ ", "
+                              ^ (string_of_int d.year))))
 
 let date (year, month, day, hour, min) =
   { month; day; year; hour; min }

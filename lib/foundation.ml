@@ -237,13 +237,23 @@ let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
       trailers
     ])
 
-let top_nav ~title ~title_uri ~nav_links =
+let top_nav ~title ~title_uri ~nav_links ?right_links () =
+  let rls = match right_links with
+    | None -> empty
+    | Some e -> e
+  in
   div ~cls:"top-bar" (
       div ~cls:"top-bar-left" (
         ul ~add_li:false ~cls:"dropdown menu" ~attrs: ["data-dropdown-menu", ""][
           li ~cls:"menu-text" (a ~href:title_uri title);
           nav_links;
       ]
+      )
+      ++
+      div ~cls:"top-bar-right" (
+        ul ~add_li:false ~cls:"menu" [
+          rls
+        ]
       )
     )
 

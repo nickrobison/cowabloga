@@ -61,6 +61,11 @@ val body:
   -> headers:Cow.Html.t -> content:Cow.Html.t -> trailers:Cow.Html.t
   -> unit -> Cow.Html.t
 
-val top_nav : title:Cow.Html.t -> title_uri:Uri.t -> nav_links:Cow.Html.t -> Cow.Html.t
+val top_nav :
+  title:Cow.Html.t
+  -> title_uri:Uri.t
+  -> nav_links:Cow.Html.t
+  -> ?right_links:Cow.Html.t
+  -> unit -> Cow.Html.t
 
 val page: body:Cow.Html.t -> string
