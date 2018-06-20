@@ -184,7 +184,7 @@ module Blog = struct
 
 end
 
-let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
+let body ?google_analytics ?highlight ?(bigfoot=false) ~title:t ~headers ~content ~trailers () =
   (* Cannot be inlined below as the $ is interpreted as an
      antiquotation *)
   let js_init = [`Data "$(document).foundation();"] in
@@ -194,6 +194,13 @@ let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
       link ~rel:"stylesheet" (Uri.of_string style),
       script ~src:(Uri.of_string "/js/vendor/highlight.pack.js") empty
       ++ script (string "hljs.initHighlightingOnLoad(); ")
+  in
+  let bigfoot_css, bigfoot_trailer = match bigfoot with
+    | false -> empty, empty
+    | true ->
+      link ~rel:"stylesheet" (Uri.of_string "/css/vendor/bigfoot-default.css"),
+      script ~src:(Uri.of_string "/js/vendor/bigfoot.min.js") empty
+      ++ script (string "$.bigfoot(); ")
   in
   let ga =
     match google_analytics with
@@ -222,9 +229,10 @@ let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
       meta ["charset","utf-8"];
       meta ["name","viewport"; "content","width=device-width"];
       title (string t);
-      link ~rel:"stylesheet" (Uri.of_string "/css/foundation.min.css");
+      link ~rel:"stylesheet" (Uri.of_string "/css/vendor/foundation.min.css");
       link ~rel:"stylesheet" (Uri.of_string "/css/site.css");
       highlight_css;
+      bigfoot_css;
       ga;
       headers;
     ])
@@ -234,6 +242,7 @@ let body ?google_analytics ?highlight ~title:t ~headers ~content ~trailers () =
       script ~src:(Uri.of_string "/js/vendor/foundation.min.js") empty;
       script js_init;
       highlight_trailer;
+      bigfoot_trailer;
       trailers
     ])
 
