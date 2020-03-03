@@ -9,9 +9,9 @@ bug-reports:  "https://github.com/mirage/cowabloga/issues"
 doc:          "https://mirage.github.io/cowabloga/"
 
 build: [
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "build" "-p" name "-j" jobs]
 ]
-build-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
+build-test: [["dune" "runtest" "-p" name "-j" jobs]]
 
 depends: [
   "re" {>= "1.7.2"}
@@ -20,7 +20,7 @@ depends: [
   "lwt" {>= "2.4.3"}
   "cstruct" {>= "1.0.1"}
   "magic-mime"
-  "jbuilder"  {build}
+  "dune"  {build & >= "1.0"}
   "cohttp" {test & >= "0.5.0"}
   "cohttp-lwt-unix" {test}
 ]
